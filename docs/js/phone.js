@@ -86,7 +86,7 @@
   function render() {
     var h = "";
     if (!S.isSignedIn) {
-      h += '<div class="m-card pc center">' + '<span style="width:48px;height:48px;color:var(--primary)">' + icon("i-bot") + "</span>" +
+      h += '<div class="m-card pc center">' + '<span class="welcome-ico">' + icon("i-bot") + "</span>" +
         "<h3>Welcome</h3><p>Sign in to access your inbox, schedule meetings, and get daily briefings.</p>" +
         '<button class="m-btn" type="button" data-act="signin" style="margin-top:6px">Sign in with Google</button></div>';
     } else {

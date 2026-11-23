@@ -127,6 +127,7 @@ section.block { padding: 84px 0 8px; }
 .appbar svg { width: 26px; height: 26px; color: var(--primary); }
 .appbar .title { font: 500 19px var(--sans); flex: 1; }
 .appbar button { border: 0; background: none; color: var(--ink-2); cursor: pointer; padding: 6px; border-radius: 50%; display: grid; }
+.appbar button[hidden] { display: none; }
 .appbar button svg { width: 20px; height: 20px; color: inherit; }
 .content { flex: 1; overflow-y: auto; padding: 12px 14px 90px; display: flex; flex-direction: column; gap: 12px; scrollbar-width: none; }
 .content::-webkit-scrollbar { display: none; }
@@ -134,6 +135,8 @@ section.block { padding: 84px 0 8px; }
 .m-card { border-radius: 16px; padding: 16px; background: var(--surface); box-shadow: 0 1px 2px rgba(0, 0, 0, .08); }
 .m-card.pc { background: var(--primary-c); color: var(--on-primary-c); }
 .m-card.center { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 8px; }
+.welcome-ico { display: block; width: 48px; height: 48px; color: var(--primary); }
+.welcome-ico svg { width: 100%; height: 100%; display: block; }
 .m-card h3 { margin: 0; font: 600 18px var(--sans); }
 .m-card p { margin: 0; font-size: 14px; opacity: .85; }
 .m-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 100%; height: 48px; border-radius: 24px; border: 0; font: 600 15px var(--sans); cursor: pointer; background: var(--primary); color: var(--on-primary); }
@@ -265,7 +268,7 @@ section.block { padding: 84px 0 8px; }
 .steps li:last-child::after { display: none; }
 .steps li b { display: block; font-size: 16px; }
 .steps li span { color: var(--ink-2); font-size: 15px; }
-.steps li .ref { display: block; font: 12.5px var(--mono); color: var(--ink-3); margin-top: 2px; }
+.steps li .ref { display: block; font: 12.5px var(--mono); color: var(--ink-3); margin-top: 2px; overflow-wrap: anywhere; }
 .steps li.bug::before { background: var(--marigold-soft); color: var(--kw-ink); content: "!"; }
 .steps li.bug span { color: var(--ink); }
 
