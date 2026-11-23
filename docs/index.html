@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Agentic Assistant</title>
+  <meta name="description" content="Try Agentic Assistant, a voice-driven Android app for Gmail and Google Calendar, in a browser simulator that runs the app's own logic on a made-up inbox. Plus its architecture, pipelines and setup guide.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%233a6ea5'/%3E%3Crect x='8' y='10' width='16' height='13' rx='4' fill='%23d4e4f7'/%3E%3Ccircle cx='13' cy='16' r='1.8' fill='%233a6ea5'/%3E%3Ccircle cx='19' cy='16' r='1.8' fill='%233a6ea5'/%3E%3Cpath d='M16 6v4' stroke='%23d4e4f7' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E">
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem("aa-theme") || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+        document.documentElement.setAttribute("data-theme", t);
+      } catch (e) { document.documentElement.setAttribute("data-theme", "light"); }
+    })();
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=Fragment+Mono&family=Young+Serif&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/site.css">
+</head>
+<body>
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="i-bot" viewBox="0 0 24 24"><path fill="currentColor" d="M20 9V7c0-1.1-.9-2-2-2h-3c0-1.66-1.34-3-3-3S9 3.34 9 5H6c-1.1 0-2 .9-2 2v2c-1.66 0-3 1.34-3 3s1.34 3 3 3v4c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2v-4c1.66 0 3-1.34 3-3s-1.34-3-3-3zM7.5 11.5c0-.83.67-1.5 1.5-1.5s1.5.67 1.5 1.5S9.83 13 9 13s-1.5-.67-1.5-1.5zM16 17H8v-2h8v2zm-1-4c-.83 0-1.5-.67-1.5-1.5S14.17 10 15 10s1.5.67 1.5 1.5S15.83 13 15 13z"/></symbol>
+    <symbol id="i-mic" viewBox="0 0 24 24"><path fill="currentColor" d="M12 14c1.66 0 2.99-1.34 2.99-3L15 5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.3-3c0 3-2.54 5.1-5.3 5.1S6.7 14 6.7 11H5c0 3.41 2.72 6.23 6 6.72V21h2v-3.28c3.28-.48 6-3.3 6-6.72h-1.7z"/></symbol>
+    <symbol id="i-mail" viewBox="0 0 24 24"><path fill="currentColor" d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4-8 5-8-5V6l8 5 8-5v2z"/></symbol>
+    <symbol id="i-cal" viewBox="0 0 24 24"><path fill="currentColor" d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zM9 14H7v-2h2v2zm4 0h-2v-2h2v2zm4 0h-2v-2h2v2zm-8 4H7v-2h2v2zm4 0h-2v-2h2v2zm4 0h-2v-2h2v2z"/></symbol>
+    <symbol id="i-stats" viewBox="0 0 24 24"><path fill="currentColor" d="M19.88 18.47c.44-.7.7-1.51.7-2.39 0-2.49-2.01-4.5-4.5-4.5s-4.5 2.01-4.5 4.5 2.01 4.5 4.49 4.5c.88 0 1.7-.26 2.39-.7L21.58 23 23 21.58l-3.12-3.11zm-3.8.11c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5zm-.36-8.5c-.74.02-1.45.18-2.1.45l-.55-.83-3.8 6.18-3.01-3.52-3.63 5.81L1 17l5-8 3 3.5L13 6l2.72 4.08zm2.59.5c-.64-.28-1.33-.45-2.05-.49L21.38 2 23 3.18l-4.69 7.4z"/></symbol>
+    <symbol id="i-video" viewBox="0 0 24 24"><path fill="currentColor" d="M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4zM14 13h-3v3H9v-3H6v-2h3V8h2v3h3v2z"/></symbol>
+    <symbol id="i-logout" viewBox="0 0 24 24"><path fill="currentColor" d="m17 7-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></symbol>
+    <symbol id="i-bell" viewBox="0 0 24 24"><path fill="currentColor" d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></symbol>
+    <symbol id="i-wifi" viewBox="0 0 24 24"><path fill="currentColor" d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8 3 3 3-3a4.237 4.237 0 0 0-6 0zm-4-4 2 2a7.074 7.074 0 0 1 10 0l2-2C15.14 9.14 8.87 9.14 5 13z"/></symbol>
+    <symbol id="i-batt" viewBox="0 0 24 24"><path fill="currentColor" d="M15.67 4H14V2h-4v2H8.33C7.6 4 7 4.6 7 5.33v15.33C7 21.4 7.6 22 8.33 22h7.33c.74 0 1.34-.6 1.34-1.33V5.33C17 4.6 16.4 4 15.67 4z"/></symbol>
+    <symbol id="i-send" viewBox="0 0 24 24"><path fill="currentColor" d="M2.01 21 23 12 2.01 3 2 10l15 2-15 2z"/></symbol>
+    <symbol id="i-forward" viewBox="0 0 24 24"><path fill="currentColor" d="M4 18l8.5-6L4 6v12zm9-12v12l8.5-6L13 6z"/></symbol>
+    <symbol id="i-volume" viewBox="0 0 24 24"><path fill="currentColor" d="M3 9v6h4l5 5V4L7 9H3zm13.5 3A4.5 4.5 0 0 0 14 7.97v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></symbol>
+    <symbol id="i-cloud" viewBox="0 0 24 24"><path fill="currentColor" d="M19.35 10.04A7.49 7.49 0 0 0 12 4C9.11 4 6.6 5.64 5.35 8.04A5.994 5.994 0 0 0 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96z"/></symbol>
+    <symbol id="i-gear" viewBox="0 0 24 24"><path fill="currentColor" d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58a.49.49 0 0 0 .12-.61l-1.92-3.32a.488.488 0 0 0-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54a.484.484 0 0 0-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58a.49.49 0 0 0-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24"><path fill="currentColor" d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></symbol>
+  </svg>
+
+  <header class="top">
+    <div class="wrap">
+      <a class="brand" href="#top" aria-label="Agentic Assistant, back to top"><span class="brand-ico"><svg><use href="#i-bot"/></svg></span><span class="name">Agentic Assistant</span></a>
+      <nav class="nav" aria-label="Sections">
+        <a href="#simulator">Simulator</a>
+        <a href="#inbox">Inbox</a>
+        <a href="#architecture">Architecture</a>
+        <a href="#pipelines">Pipelines</a>
+        <a href="#build">Build</a>
+        <a href="#notes">Notes</a>
+      </nav>
+      <button class="icon-btn theme-btn" id="theme-btn" type="button" aria-label="Toggle dark mode" title="Toggle dark mode">
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+        <svg class="moon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5a9 9 0 1 0 11 11Z"/></svg>
+      </button>
+      <a class="icon-btn" href="https://github.com/SparshSunilNaik/AI-Assistant-PoC" aria-label="Source on GitHub" title="Source on GitHub">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5a11.5 11.5 0 0 0-3.64 22.41c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.52-1.33-1.28-1.69-1.28-1.69-1.05-.72.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.84 1.19 3.1 0 4.42-2.7 5.39-5.26 5.68.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .5Z"/></svg>
+      </a>
+    </div>
+  </header>
+
+  <main id="top">
+    <div class="wrap">
+      <section class="hero" id="simulator">
+        <div>
+          <h1>Talk to your inbox. <span>Hear your day.</span></h1>
+          <p><b>Agentic Assistant</b> is an Android app that reads your Gmail, spots meeting requests, books them in Google Calendar with a Meet link, and reads your day back to you, all from a voice command. Try it below: the phone runs the app's own logic, translated line by line, on a made-up inbox.</p>
+        </div>
+        <div class="hero-tags"><span class="tag">Kotlin</span><span class="tag">Jetpack Compose</span><span class="tag">Gmail + Calendar APIs</span><span class="tag">No backend</span></div>
+      </section>
+
+      <div class="sim">
+        <div class="phone-col">
+          <div class="phone" aria-label="Simulated Android phone running Agentic Assistant">
+            <div class="screen" id="screen">
+              <div class="statusbar"><span id="sb-time">9:00</span><span class="icons"><svg><use href="#i-wifi"/></svg><svg><use href="#i-batt"/></svg></span></div>
+              <div class="appbar"><svg aria-hidden="true"><use href="#i-bot"/></svg><span class="title">Agentic Assistant</span><button type="button" id="ph-logout" aria-label="Logout" hidden><svg><use href="#i-logout"/></svg></button></div>
+              <div class="content" id="ph-content" aria-live="polite"></div>
+              <div class="caption" id="ph-caption" aria-hidden="true"><span class="wave"><i></i><i></i><i></i><i></i></span><span id="ph-caption-text"></span></div>
+              <div class="shade" id="ph-shade"></div>
+              <div class="homebar"></div>
+            </div>
+          </div>
+          <p class="phone-foot">Made-up account, inbox and calendar. Nothing here connects to Google.</p>
+        </div>
+
+        <div class="controls">
+          <div class="card panel">
+            <h3>Say something</h3>
+            <p>Type what you'd say to the phone, or pick a phrase. It goes through the app's <code>parseCommand()</code> exactly as recognised speech would.</p>
+            <form class="say" id="say-form">
+              <label class="sr" for="say-input">Voice command</label>
+              <input id="say-input" type="text" placeholder="e.g. check my inbox" autocomplete="off">
+              <button class="btn primary" type="submit"><svg><use href="#i-send"/></svg>Say it</button>
+              <button class="btn" type="button" id="mic-btn" title="Use your microphone"><svg><use href="#i-mic"/></svg>Mic</button>
+            </form>
+            <div class="chips" id="phrase-chips"></div>
+            <div class="parse" id="parse-out" aria-live="polite"></div>
+          </div>
+
+          <div class="card panel">
+            <div class="toggles">
+              <label class="switch"><input type="checkbox" id="tts-toggle"> Read replies aloud</label>
+              <label class="switch"><input type="checkbox" id="mic-toggle"> Allow real microphone</label>
+            </div>
+            <p class="note" id="mic-note">The microphone uses your browser's speech recognition; in Chrome, audio is sent to Google to be transcribed. It stays off unless you switch it on.</p>
+          </div>
+
+          <div class="card panel">
+            <h3>Background monitor</h3>
+            <p><code>InboxMonitorWorker</code> runs every 15 minutes, checks the 5 newest emails and notifies you about meeting requests. Skip ahead to see it fire.</p>
+            <div class="clock-row">
+              <span class="clock" id="clock">Mon 9:00 AM</span>
+              <button class="btn small tonal" type="button" id="ff-btn"><svg><use href="#i-forward"/></svg>Fast-forward 15 minutes</button>
+              <button class="btn small" type="button" id="reset-btn">Reset phone</button>
+            </div>
+          </div>
+
+          <div class="card panel">
+            <div class="log-head"><h3>Under the hood</h3><button class="btn small" type="button" id="log-clear">Clear</button></div>
+            <pre class="logcat" id="logcat" aria-label="Logcat output" tabindex="0"></pre>
+          </div>
+        </div>
+      </div>
+
+      <section class="block" id="inbox">
+        <div class="sec-head">
+          <span class="kicker">The inbox</span>
+          <h2>Edit an email, watch the rules react</h2>
+          <p>These are the 10 emails the phone reads. Click any subject or text to change it. Highlights come from the app's exact keyword list and regexes, and the phone uses whatever you leave here.</p>
+        </div>
+        <div class="mailbox">
+          <div class="mails" id="mails"></div>
+          <aside class="card analysis" id="analysis" aria-live="polite"></aside>
+        </div>
+      </section>
+
+      <section class="block" id="architecture">
+        <div class="sec-head">
+          <span class="kicker">Architecture</span>
+          <h2>Six layers, all on the phone</h2>
+          <p>There's no server in between: the phone signs in with Google, calls the Gmail and Calendar APIs itself, and does every bit of analysis in local Kotlin. Pick a layer to see its files.</p>
+        </div>
+        <div class="arch">
+          <div class="card layers" id="layers"></div>
+          <div class="card layer-detail" id="layer-detail" aria-live="polite"></div>
+        </div>
+      </section>
+
+      <section class="block" id="pipelines">
+        <div class="sec-head">
+          <span class="kicker">Pipelines</span>
+          <h2>What happens after you speak</h2>
+          <p>Each command runs a short pipeline in <code>MainActivity</code>. Steps marked with an exclamation mark behave differently from what you might expect.</p>
+        </div>
+        <div class="tabs" role="tablist" id="pipe-tabs"></div>
+        <div class="card pipe" id="pipe" role="tabpanel"></div>
+      </section>
+
+      <section class="block" id="build">
+        <div class="sec-head">
+          <span class="kicker">Build and run</span>
+          <h2>Run it on your own phone</h2>
+          <p>The repository has no README yet, so here is the setup. You need Android Studio and a Google Cloud project, because the app signs in with your own Google account.</p>
+        </div>
+        <div class="build" id="build-grid"></div>
+      </section>
+
+      <section class="block" id="notes">
+        <div class="sec-head">
+          <span class="kicker">Notes</span>
+          <h2>Worth fixing next</h2>
+          <p>It's a proof of concept, and the simulator reproduces these behaviours faithfully. Use the buttons to see each one happen.</p>
+        </div>
+        <div class="issues" id="issues"></div>
+      </section>
+    </div>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <span>A companion site for <a href="https://github.com/SparshSunilNaik/AI-Assistant-PoC">AI-Assistant-PoC</a> by Sparsh Sunil Naik. Every name and email address in the simulator is made up.</span>
+      <span>Kotlin, Jetpack Compose, Google APIs</span>
+    </div>
+  </footer>
+
+  <script src="js/theme.js"></script>
+  <script src="js/agent.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/phone.js"></script>
+  <script src="js/inbox.js"></script>
+  <script src="js/docs.js"></script>
+</body>
+</html>
