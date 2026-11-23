@@ -130,6 +130,7 @@ section.block { padding: 84px 0 8px; }
 .appbar button svg { width: 20px; height: 20px; color: inherit; }
 .content { flex: 1; overflow-y: auto; padding: 12px 14px 90px; display: flex; flex-direction: column; gap: 12px; scrollbar-width: none; }
 .content::-webkit-scrollbar { display: none; }
+.content > * { flex-shrink: 0; }
 .m-card { border-radius: 16px; padding: 16px; background: var(--surface); box-shadow: 0 1px 2px rgba(0, 0, 0, .08); }
 .m-card.pc { background: var(--primary-c); color: var(--on-primary-c); }
 .m-card.center { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 8px; }
